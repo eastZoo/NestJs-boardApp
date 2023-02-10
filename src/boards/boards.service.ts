@@ -37,4 +37,11 @@ export class BoardsService {
     // 삭제하는 로직이라 리턴값을 따로 주지 않을거기에 void (프로젝트에 따라 다름)
     this.boards = this.boards.filter((board) => board.id !== id);
   }
+
+  updateBoardStatus(id: string, status: BoardStatus): Board {
+    // getBoardById 내가 찾고자하는 특정 게시물의 정보를 리턴해주는 함수 재사용
+    const board = this.getBoardById(id);
+    board.status = status;
+    return board;
+  }
 }
