@@ -12,7 +12,7 @@ export class BoardsService {
     return this.boards;
   }
 
-  // 게시글 생성하는 기능
+  // POST 게시글 생성하는 기능
   createBoard(createBoardDto: CreateBoardDto) {
     const { title, description } = createBoardDto;
 
@@ -25,5 +25,10 @@ export class BoardsService {
 
     this.boards.push(board);
     return board;
+  }
+
+  // GET ID로 특정 게시물 가져오기
+  getBoardById(id: string): Board {
+    return this.boards.find((board) => board.id === id);
   }
 }
