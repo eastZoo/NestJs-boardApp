@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Board, BoardStatus } from './board.model';
 import { v1 as uuid } from 'uuid';
+import { CreateBoardDto } from './dto/create-board.dto';
 @Injectable()
 export class BoardsService {
   // private를 사용한 이유 : 사용하지 않으면 다른컴포넌트에서 boards 값에 접근가능하기 때문에
@@ -12,7 +13,9 @@ export class BoardsService {
   }
 
   // 게시글 생성하는 기능
-  createBoard(title: string, description: string) {
+  createBoard(createBoardDto: CreateBoardDto) {
+    const { title, description } = createBoardDto;
+
     const board: Board = {
       id: uuid(), // 유니크한 값 생성 라이브러리
       title: title,
