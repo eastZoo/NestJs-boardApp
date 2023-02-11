@@ -42,7 +42,9 @@ export class BoardsService {
   // DELETE ID로 특정 게시물 삭제하기
   deleteBoard(id: string): void {
     // 삭제하는 로직이라 리턴값을 따로 주지 않을거기에 void (프로젝트에 따라 다름)
-    this.boards = this.boards.filter((board) => board.id !== id);
+    const found = this.getBoardById(id);
+
+    this.boards = this.boards.filter((board) => board.id !== found.id);
   }
 
   updateBoardStatus(id: string, status: BoardStatus): Board {
