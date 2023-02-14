@@ -35,6 +35,18 @@ export class BoardsService {
 
     return found;
   }
+
+  // DELETE ID로 특정 게시물 삭제하기
+  async deleteBoard(id: number): Promise<void> {
+    // 삭제하는 로직이라 리턴값을 따로 주지 않을거기에 void (프로젝트에 따라 다름)
+    const result = await this.boardRepository.delete(id);
+
+    if (result.affected === 0) {
+      throw new NotFoundException(`Can't find Board with this id ${id}`);
+    }
+    console.log('result', result);
+  }
+
   // //getAllBoards 함수 역시 this를 통해 위의 boards를 반환하기 때문에 타입스크립트 반환 타입은 같다.
   // getAllBoards(): Board[] {
   //   return this.boards;

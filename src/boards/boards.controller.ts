@@ -9,6 +9,7 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
+import { ParseIntPipe } from '@nestjs/common/pipes';
 import { BoardStatus } from './board-status.enum';
 import { Board } from './board.entity';
 import { BoardsService } from './boards.service';
@@ -29,6 +30,11 @@ export class BoardsController {
   @Get('/:id')
   getBoardById(@Param('id') id: number): Promise<Board> {
     return this.boardsService.getBoardById(id);
+  }
+
+  @Delete('/:id')
+  deleteBoard(@Param('id', ParseIntPipe) id: number): Promise<void> {
+    return this.boardsService.deleteBoard(id);
   }
 
   // @Get('/')
