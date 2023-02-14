@@ -5,15 +5,29 @@ import { CreateBoardDto } from './dto/create-board.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BoardRepository } from './board.repository';
 import { Board } from './board.entity';
+import { Repository } from 'typeorm';
+
 @Injectable()
 export class BoardsService {
   constructor(
-    @InjectRepository(BoardRepository)
-    private boardRepository: BoardRepository,
+    @InjectRepository(Board)
+    private boardRepository: Repository<Board>,
   ) {}
 
+  async createBoard(createBoardDto: CreateBoardDto): Promise<Board> {
+    const { title, description } = createBoardDto;
+    const board = this.boardRepository.create({
+      title: title,
+      description: description,
+      status: BoardStatus.PUBLIC,
+    });
+
+    await this.boardRepository.save(board);
+    return board;
+  }
+
   async getBoardById(id: number): Promise<Board> {
-    const found = await this.boardRepository.findOne(id);
+    const found = await this.boardRepository.findOne({ where: { id } });
 
     if (!found) {
       throw new NotFoundException("Can't find Board with ${}");
