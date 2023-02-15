@@ -1,4 +1,8 @@
-import { Injectable, ConflictException } from '@nestjs/common';
+import {
+  Injectable,
+  ConflictException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { AuthCredentialsDto } from './dto/auth-credential.dto';
@@ -31,6 +35,17 @@ export class AuthService {
         throw new ConflictException('Existing username');
       }
       console.log('error', error);
+    }
+  }
+
+  async signInUser(authCredentialsDto: AuthCredentialsDto): Promise<string> {
+    const { username, password } = authCredentialsDto;
+    const user = await this.userRepository.findOne({ where: { username } });
+
+    if (user && (await bcrypt.compare(password, user.password))) {
+      return 'logIn success';
+    } else {
+      throw new UnauthorizedException('logIn failed');
     }
   }
 }
