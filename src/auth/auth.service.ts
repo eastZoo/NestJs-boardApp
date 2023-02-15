@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { AuthCredentialsDto } from './dto/auth-credential.dto';
 import { User } from './user.entity';
-
+import * as bcrypt from 'bcrypt';
 @Injectable()
 export class AuthService {
   constructor(
@@ -15,9 +15,12 @@ export class AuthService {
     console.log(authCredentialsDto);
     const { username, password } = authCredentialsDto;
 
+    const salt = await bcrypt.genSalt();
+    const hashedPassword = await bcrypt.hash(password, salt);
+
     const user = this.userRepository.create({
       username: username,
-      password: password,
+      password: hashedPassword,
     });
 
     // 중복 아이디 판단
