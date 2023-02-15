@@ -14,6 +14,11 @@ export class BoardsService {
     private boardRepository: Repository<Board>,
   ) {}
 
+  //getAllBoards 함수 역시 this를 통해 위의 boards를 반환하기 때문에 타입스크립트 반환 타입은 같다.
+  async getAllBoards(): Promise<Board[]> {
+    return this.boardRepository.find();
+  }
+
   async createBoard(createBoardDto: CreateBoardDto): Promise<Board> {
     const { title, description } = createBoardDto;
     const board = this.boardRepository.create({
