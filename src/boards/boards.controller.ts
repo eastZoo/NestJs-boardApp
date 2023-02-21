@@ -17,6 +17,8 @@ import { BoardsService } from './boards.service';
 import { CreateBoardDto } from './dto/create-board.dto';
 import { BoardStatusValidationPipe } from './pipes/board-status-validation.pipe';
 import { UseGuards } from '@nestjs/common/decorators';
+import { GetUser } from 'src/auth/get-user.decorator';
+import { User } from 'src/auth/user.entity';
 
 @Controller('boards')
 @UseGuards(AuthGuard('jwt'))
@@ -30,9 +32,12 @@ export class BoardsController {
 
   @Post('/')
   @UsePipes(ValidationPipe)
-  createBoard(@Body() createBoardDto: CreateBoardDto): Promise<Board> {
+  createBoard(
+    @Body() createBoardDto: CreateBoardDto,
+    @GetUser() user: User,
+  ): Promise<Board> {
     // 여기는 Post를 통해 하나만 날리는 리턴 값이기 때문에 모두 가져올때 사용하는 [] 을 쓰지 않아도됨
-    return this.boardsService.createBoard(createBoardDto);
+    return this.boardsService.createBoard(createBoardDto, user);
   }
 
   @Get('/:id')
