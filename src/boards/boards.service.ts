@@ -56,9 +56,16 @@ export class BoardsService {
   }
 
   // DELETE ID로 특정 게시물 삭제하기
-  async deleteBoard(id: number): Promise<void> {
+  async deleteBoard(id: number, user: User): Promise<void> {
     // 삭제하는 로직이라 리턴값을 따로 주지 않을거기에 void (프로젝트에 따라 다름)
-    const result = await this.boardRepository.delete(id);
+    const query = this.boardRepository.createQueryBuilder('board');
+
+    const result = await query
+      .delete()
+      .from(Board)
+      .where('userId = :userId', { userId: user.id })
+      .andWhere('id = :id', { id: id })
+      .execute();
 
     if (result.affected === 0) {
       throw new NotFoundException(`Can't find Board with this id ${id}`);
