@@ -8,6 +8,7 @@ import {
   Patch,
   UsePipes,
   ValidationPipe,
+  Logger,
 } from '@nestjs/common';
 import { ParseIntPipe } from '@nestjs/common/pipes';
 import { AuthGuard } from '@nestjs/passport';
@@ -23,6 +24,7 @@ import { User } from 'src/auth/user.entity';
 @Controller('boards')
 @UseGuards(AuthGuard('jwt'))
 export class BoardsController {
+  private logger = new Logger('BoardsController');
   constructor(private boardsService: BoardsService) {}
 
   @Get('/')
@@ -32,6 +34,7 @@ export class BoardsController {
 
   @Get('/myboards')
   getMyBoard(@GetUser() user: User): Promise<Board[]> {
+    this.logger.verbose(`User "${user.username}" trying to get all boards`);
     return this.boardsService.getMyBoards(user);
   }
 
@@ -41,6 +44,11 @@ export class BoardsController {
     @Body() createBoardDto: CreateBoardDto,
     @GetUser() user: User,
   ): Promise<Board> {
+    this.logger.verbose(
+      `User "${user.username}" create a new board. Payload: ${JSON.stringify(
+        createBoardDto,
+      )}`,
+    );
     // 여기는 Post를 통해 하나만 날리는 리턴 값이기 때문에 모두 가져올때 사용하는 [] 을 쓰지 않아도됨
     return this.boardsService.createBoard(createBoardDto, user);
   }
