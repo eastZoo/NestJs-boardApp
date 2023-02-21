@@ -30,6 +30,11 @@ export class BoardsController {
     return this.boardsService.getAllBoards();
   }
 
+  @Get('/myboards')
+  getMyBoard(@GetUser() user: User): Promise<Board[]> {
+    return this.boardsService.getMyBoards(user);
+  }
+
   @Post('/')
   @UsePipes(ValidationPipe)
   createBoard(
