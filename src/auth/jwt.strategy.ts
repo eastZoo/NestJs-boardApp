@@ -4,7 +4,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { User } from './user.entity';
 import { UserRepository } from './user.repository';
+import * as config from 'config';
 
+const jwtConfig = config.get('jwt');
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
@@ -15,7 +17,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     super({
       // auth.module.ts 에서 사용한 시크릿키( 생성시 )와 똑같은 것을 써줘야함
       // 여기서는 생성시가 아니라 반대로 확인할때 같은키로 여는 것과같이 같은 키로 확인할수 있다.
-      secretOrKey: 'Secret1234',
+      secretOrKey: process.env.JWT_SECRET || config.get('jwt.secret'),
       // Bearer타입으로 넘어오는 토큰을 받겠다는 뜻
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
     });
